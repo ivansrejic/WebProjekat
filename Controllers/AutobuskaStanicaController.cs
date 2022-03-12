@@ -32,7 +32,7 @@ namespace Controllers
                     Prezime = x.PutnikFK.Prezime,
                     JMBG = x.PutnikFK.JMBG,
                     Cena = x.Cena,
-                    Vreme = x.datum,
+                    Vreme = x.AutobusFK.datumm,
                     Prevoznik = x.AutobusFK.NazivPrevoznika,
                     Destinacija = x.AutobusFK.Destinacija,
                     brojSedista = x.BrojSedista,
@@ -57,7 +57,7 @@ namespace Controllers
                     Prezime = y.PutnikFK.Prezime,
                     JMBG = y.PutnikFK.JMBG,
                     Cena = y.Cena,
-                    Vreme = y.datum,
+                    Vreme = y.AutobusFK.datumm,
                     Prevoznik = y.AutobusFK.NazivPrevoznika,
                     Destinacija = y.AutobusFK.Destinacija,
                     brojSedista = y.BrojSedista,
@@ -89,7 +89,7 @@ namespace Controllers
                     Prezime = y.PutnikFK.Prezime,
                     JMBG = y.PutnikFK.JMBG,
                     Cena = y.Cena,
-                    Vreme = y.datum,
+                    Vreme = y.AutobusFK.datumm,
                     Prevoznik = y.AutobusFK.NazivPrevoznika,
                     Destinacija = y.AutobusFK.Destinacija,
                     brojSedista = y.BrojSedista,
@@ -122,11 +122,12 @@ namespace Controllers
                     Prezime = y.PutnikFK.Prezime,
                     JMBG = y.PutnikFK.JMBG,
                     Cena = y.Cena,
-                    Vreme = y.datum,
+                    Vreme = y.AutobusFK.datumm,
                     Prevoznik = y.AutobusFK.NazivPrevoznika,
                     Destinacija = y.AutobusFK.Destinacija,
                     brojSedista = y.BrojSedista,
                 }).ToListAsync();
+                
                 if(karta != null)
                 {
                     return Ok(karta);
@@ -142,41 +143,55 @@ namespace Controllers
             }
         }
 
-        [Route("KupiKartu/{brSedista}/{destinacija}/{jmbg}")]
+        [Route("KupiKartu/{brSedista}/{jmbg}/{destinacija}")]
         [HttpPost]
-        public async Task<ActionResult>kupiKartu(int brSedista,string destinacija,string jmbg,DateTime datumm)
+        public async Task<ActionResult>kupiKartu(int brSedista,string jmbg,string destinacija)
         {
             try
-            {
-                if(jmbg.Length == 13 && jmbg != null && brSedista <16 && brSedista >1)
-                {
-                    int cena;
-                    var putnik = await Context.Putnici.Where(x=>x.JMBG == jmbg).FirstOrDefaultAsync();
-                    var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).FirstOrDefaultAsync();
-                    if(destinacija == "Beograd")
+            {           
+                int cena;
+                if(destinacija == "Beograd")
                     {
-                        cena = 300;
+                         cena = 300;
+                    }
+                else
+                    {
+                         cena = 200;
+                    }
+                
+                var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
+                
+                if(kupljenaKarta == null)
+                {
+                    if(jmbg != null && jmbg.Length == 13 && brSedista < 16 && brSedista > 1)
+                        {
+                            var putnik = await Context.Putnici.Where(x=>x.JMBG == jmbg).FirstOrDefaultAsync();
+                            var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).FirstOrDefaultAsync();
+                            var sediste = await Context.Karte.Where(x=>x.BrojSedista == brSedista).FirstOrDefaultAsync();
+                            if(putnik != null && bus != null && sediste == null)
+                                {
+                                    Karta k = new Karta
+                                        {
+                                            BrojSedista = brSedista,
+                                            Cena = cena,
+                                            PutnikFK = putnik,
+                                            AutobusFK = bus
+                                        };
+                                    Context.Karte.Add(k);
+                                    await Context.SaveChangesAsync();
+                                    return Ok("Uspesno");
+                                }
+                            else
+                                return BadRequest("Zauzeto sediste npr");
+                                
+                        }
+                        else
+                            return BadRequest("Pogresan jmbg ili sediste");
                     }
                     else
                     {
-                        cena = 200;
-                    }
-                    Karta k = new Karta
-                    {
-                        BrojSedista = brSedista,
-                        Cena = cena,
-                        datum = datumm,
-                        PutnikFK = putnik,
-                        AutobusFK = bus
-                    };
-                    Context.Karte.Add(k);
-                    await Context.SaveChangesAsync();
-                    return Ok("Uspesno kupljena karta");
-                }
-                else
-                {
-                    return BadRequest("Pogresno uneti podaci");
-                }
+                        return BadRequest("Putnik je vec kupio kartu");
+                    }          
             }
             catch(Exception e)
             {
@@ -184,15 +199,15 @@ namespace Controllers
             }
         }
 
-        [Route("IzbrisiKupljenuKartu/{jmbg}/{brSedista}")]
+        [Route("IzbrisiKupljenuKartu/{jmbg}")]
         [HttpDelete]
-        public async Task<ActionResult> izbrisiKupljenuKartu(string jmbg,int brSedista)
+        public async Task<ActionResult> izbrisiKupljenuKartu(string jmbg)
         {
             try
             {
                 if(jmbg!=null && jmbg.Length==13)
                 {
-                    var karta = await Context.Karte.Include(p=>p.PutnikFK).Include(h=>h.AutobusFK).Where(x=>x.PutnikFK.JMBG == jmbg).Where(x=>x.BrojSedista == brSedista).FirstOrDefaultAsync();
+                    var karta = await Context.Karte.Include(p=>p.PutnikFK).Include(h=>h.AutobusFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
                     if(karta != null)
                     {
                         Context.Karte.Remove(karta);
@@ -212,17 +227,30 @@ namespace Controllers
             }
         }
 
-        [Route("IzmeniBrojSedista/{jmbg}/{brSedista}")]
+        [Route("IzmeniBrojSedista/{jmbg}/{novoSediste}")]
         [HttpPut]
-        public async Task<ActionResult> izmeniKartu(string jmbg,int brSedista,int novoSediste)
+        public async Task<ActionResult> izmeniKartu(string jmbg,int novoSediste)
         {
-            var karta = await Context.Karte.Include(p=>p.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).Where(p=>p.BrojSedista == brSedista).FirstOrDefaultAsync();
-            karta.BrojSedista = novoSediste;
+            
+            var karta = await Context.Karte.Include(p=>p.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync(); 
             try
             {
-                Context.Karte.Update(karta);
-                await Context.SaveChangesAsync();
-                return Ok("Uspesno izmenjeno");
+                if(jmbg.Length == 13 && jmbg != null)
+                {
+                    if(karta != null)
+                 {
+                    karta.BrojSedista = novoSediste;
+                    Context.Karte.Update(karta);
+                    await Context.SaveChangesAsync();
+                    return Ok("Uspesno izmenjeno");
+                 }
+                 else
+                    return BadRequest("Putnik nema kupljenu kartu");
+                }
+                else
+                    return BadRequest("Pogresno unet jmbg");
+                
+                
             }
             catch(Exception e)
             {
@@ -230,4 +258,4 @@ namespace Controllers
             }
         }
     } // Dodaj validaciju svuda
-}
+} // U DODAJ PUTNIKA CE DA SE PROVERI DA LI JE VEC U BAZI

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Models
 {
@@ -15,6 +16,8 @@ namespace Models
         [Required]
         [MaxLength(30)]
         public string NazivPrevoznika {get; set;}
+
+        public DateTime datumm {get; set; }
 
         // [Required]
         // [Range(1,16)]
