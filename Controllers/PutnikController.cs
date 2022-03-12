@@ -48,5 +48,38 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
+        
+        
+
+        [Route("izbrisiPutnika/{jmbg}")]
+        [HttpDelete]
+        public async Task<ActionResult> izbrisiPutnika(string jmbg)
+        {
+            try
+            {
+                if(jmbg!=null && jmbg.Length==13)
+                {
+                    var putnik = await Context.Putnici.Where(x => x.JMBG == jmbg).FirstOrDefaultAsync();
+                    if(putnik != null)
+                    {
+                        Context.Putnici.Remove(putnik);
+                        await Context.SaveChangesAsync();
+                        return Ok("Uspesno obrisan putnik");
+                    }
+                    else
+                    {
+                        return BadRequest("Ne postoji putnik sa tim jmbgom");
+                    }
+                }
+                else
+                {
+                    return BadRequest("neispravan jbmbg");
+                }
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

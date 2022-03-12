@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace WebProjekat.Migrations
 {
     [DbContext(typeof(AutobuskaStanicaContext))]
-    partial class AutobuskaStanicaContextModelSnapshot : ModelSnapshot
+    [Migration("20220312132454_V6")]
+    partial class V6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,6 +81,9 @@ namespace WebProjekat.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AutobusBusID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Ime")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -96,6 +101,8 @@ namespace WebProjekat.Migrations
 
                     b.HasKey("putnikID");
 
+                    b.HasIndex("AutobusBusID");
+
                     b.ToTable("Putnici");
                 });
 
@@ -106,7 +113,7 @@ namespace WebProjekat.Migrations
                         .HasForeignKey("AutobusFKBusID");
 
                     b.HasOne("Models.Putnik", "PutnikFK")
-                        .WithMany()
+                        .WithMany("KartaPutnik")
                         .HasForeignKey("PutnikFKputnikID");
 
                     b.Navigation("AutobusFK");
@@ -114,9 +121,23 @@ namespace WebProjekat.Migrations
                     b.Navigation("PutnikFK");
                 });
 
+            modelBuilder.Entity("Models.Putnik", b =>
+                {
+                    b.HasOne("Models.Autobus", null)
+                        .WithMany("ListaPutnika")
+                        .HasForeignKey("AutobusBusID");
+                });
+
             modelBuilder.Entity("Models.Autobus", b =>
                 {
                     b.Navigation("ListaKarata");
+
+                    b.Navigation("ListaPutnika");
+                });
+
+            modelBuilder.Entity("Models.Putnik", b =>
+                {
+                    b.Navigation("KartaPutnik");
                 });
 #pragma warning restore 612, 618
         }

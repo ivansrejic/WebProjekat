@@ -24,8 +24,6 @@ namespace Models
         [MaxLength(13)]
         public string JMBG { get; set; }
 
-        // [JsonIgnore]
-        // public virtual Karta KartaFK { get; set; }
-
+        // public Autobus PutnikAutobus { get; set; }
     }
 }

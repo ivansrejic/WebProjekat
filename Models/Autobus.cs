@@ -29,8 +29,8 @@ namespace Models
         [MaxLength(30)]
         public string Destinacija { get; set; }
 
-        [JsonIgnore]
-        public virtual List<Putnik> ListaPutnika { get; set; }
+        // [JsonIgnore]
+        // public virtual List<Putnik> ListaPutnika { get; set; }
 
         [JsonIgnore]
         public virtual List<Karta> ListaKarata {get; set; }

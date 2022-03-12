@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace WebProjekat.Migrations
 {
     [DbContext(typeof(AutobuskaStanicaContext))]
-    partial class AutobuskaStanicaContextModelSnapshot : ModelSnapshot
+    [Migration("20220312133333_V9")]
+    partial class V9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +96,12 @@ namespace WebProjekat.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<int?>("PutnikAutobusBusID")
+                        .HasColumnType("int");
+
                     b.HasKey("putnikID");
+
+                    b.HasIndex("PutnikAutobusBusID");
 
                     b.ToTable("Putnici");
                 });
@@ -114,9 +121,20 @@ namespace WebProjekat.Migrations
                     b.Navigation("PutnikFK");
                 });
 
+            modelBuilder.Entity("Models.Putnik", b =>
+                {
+                    b.HasOne("Models.Autobus", "PutnikAutobus")
+                        .WithMany("ListaPutnika")
+                        .HasForeignKey("PutnikAutobusBusID");
+
+                    b.Navigation("PutnikAutobus");
+                });
+
             modelBuilder.Entity("Models.Autobus", b =>
                 {
                     b.Navigation("ListaKarata");
+
+                    b.Navigation("ListaPutnika");
                 });
 #pragma warning restore 612, 618
         }
