@@ -16,6 +16,7 @@ namespace Models
         [MaxLength(30)]
         public string NazivPrevoznika {get; set;}
 
+        [MaxLength(30)]
         public string datumm {get; set; }
 
         // [Required]

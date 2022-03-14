@@ -70,19 +70,25 @@ export class BusPage
                 
                 //alert(destinacija);
                 let datum = document.querySelector("input[type = 'date']").value;
-                alert(datum);
-            
-                fetch("https://localhost:5001/Autobus/DodajBus/"+prevoznik+"/"+destinacija+"/"+datum,
-                    {
-                         method:"POST"
+                alert(datum.toString());
 
-                         }).then(s => {
-                            if(s.ok){
-                                s.json().then(data => {
-                                    
+                    fetch("https://localhost:5001/Autobus/DodajBus/",
+                        {
+                            method:"POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                "nazivPrevoznika": prevoznik,
+                                "datumm": datum,
+                                "destinacija": destinacija,
+                            })
+                        }).then(p=>
+                            {
+                                if(p.ok)
+                                {
+                                    alert("Uspeno dodata linija");
+                                }
+                                else
+                                    alert("Greska.");
                             })
                         }
-                                
-                    })
-        }
 }  

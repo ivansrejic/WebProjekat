@@ -130,19 +130,7 @@ namespace Controllers
         [Route("KupiKartu/{brSedista}/{jmbg}/{destinacija}")]
         [HttpPost]
         public async Task<ActionResult>kupiKartu(int brSedista,string jmbg,string destinacija)
-        {
-            // try
-            // {
-            //     Context.Karte.Add(karta);
-            //     await Context.SaveChangesAsync();
-            //     return Ok("Uspesno kupljena karta");
-
-            // }
-            // catch(Exception e)
-            // {
-            //     return BadRequest(e.Message);
-            // }
-            
+        {   
             try
             {           
                 int cena;
@@ -183,6 +171,79 @@ namespace Controllers
                         }
                         else
                             return BadRequest("Pogresan jmbg ili sediste");
+                    }
+                    else
+                    {
+                        return BadRequest("Putnik je vec kupio kartu");
+                    }          
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // --------------------------------------------------------------------------------------------
+
+
+        // [Route("KupiKartuFromBody")]
+        // [HttpPost]
+        // public async Task<ActionResult> kupiKartuFromBody([FromBody]Karta karta) // u js pravi validaciju da li je kupljena karta vec, tako sto ces listi vrednosti da dodajes i da proveravas
+        // {
+        //     // if (predmet.Godina < 1 && predmet.Godina > 5)
+        //     // {
+        //     //     return BadRequest("Pogrešna Godina!");
+        //     // }
+
+        //     // // ... Ostale provere, Naziv
+        //     try
+        //     {
+        //         Context.Karte.Add(karta);
+        //         await Context.SaveChangesAsync();
+        //         return Ok("Uspesno kupljena karta");
+
+        //     }
+        //     catch(Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
+
+
+        [Route("kupiKartuFromBody/{prevoznik}/{destinacija}/{brSedista}/{datum}")] // dodaj validaciju za destinaciju, za jmbg , za broj sedista da li je izmedju 1 i 16, da li je zauzeto i tako dalje
+        [HttpPost]
+        public async Task<ActionResult>kupiKartuFromBody([FromBody]Putnik putnikk,string prevoznik,string destinacija,int brSedista,string datum) // Za ovu fju dodaj proveru da li je vec kupljena karta i to, u java scriptu tako sto ces da napravis listu u klasi, i onda kada povlacis fetch,smesti tamo i onda proveri 
+        {
+            //Probaj da napravis validaciju da ne moze isti covek da kupi vise karata i da ne se proveri zauzetost sedista u odrejenom busu za odredjenu destinaciju
+            
+            try
+            {           
+                int cena;
+                if(destinacija == "Beograd")
+                    {
+                         cena = 300;
+                    }
+                else
+                    {
+                         cena = 200;
+                    }
+                
+                var kupljenaKarta = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == putnikk.JMBG).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Destinacija == destinacija).FirstOrDefaultAsync();
+                var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).Where(x=>x.NazivPrevoznika == prevoznik).Where(x=>x.datumm == datum).FirstOrDefaultAsync();
+                
+                if(kupljenaKarta == null)
+                {
+                                    Karta k = new Karta
+                                        {
+                                            BrojSedista = brSedista,
+                                            Cena = cena,
+                                            PutnikFK = putnikk,
+                                            AutobusFK = bus
+                                        };
+                                    Context.Karte.Add(k);
+                                    await Context.SaveChangesAsync();
+                                    return Ok("Uspesno");
+                                
                     }
                     else
                     {
