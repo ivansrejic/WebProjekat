@@ -24,6 +24,5 @@ namespace Models
         [MaxLength(13)]
         public string JMBG { get; set; }
 
-        // public Autobus PutnikAutobus { get; set; }
     }
 }

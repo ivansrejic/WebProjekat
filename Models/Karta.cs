@@ -21,9 +21,9 @@ namespace Models
         [Range(100,2000)]
         public int Cena { get; set; }
 
-        public virtual Putnik PutnikFK { get; set; }
-
         public virtual Autobus AutobusFK {get; set;}
+
+        public virtual Putnik PutnikFK {get; set;}
 
     }
 }

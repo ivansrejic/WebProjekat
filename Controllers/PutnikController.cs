@@ -81,5 +81,27 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Route("Preuzmi putnika/{jmbg}")]
+        [HttpGet]
+        public async Task<ActionResult> preuzmiPutnika(string jmbg)
+        {
+            try
+            {
+                if(jmbg != null && jmbg.Length == 13)
+                {
+                    var putnik = await Context.Putnici.Where(p=>p.JMBG == jmbg).FirstOrDefaultAsync();
+                    return Ok(putnik);
+                }
+                else
+                {
+                    return BadRequest("Pogresan jmbg");
+                }
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

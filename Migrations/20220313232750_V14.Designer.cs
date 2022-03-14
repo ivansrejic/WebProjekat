@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace WebProjekat.Migrations
 {
     [DbContext(typeof(AutobuskaStanicaContext))]
-    partial class AutobuskaStanicaContextModelSnapshot : ModelSnapshot
+    [Migration("20220313232750_V14")]
+    partial class V14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +79,9 @@ namespace WebProjekat.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AutobusBusID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Ime")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -93,6 +98,8 @@ namespace WebProjekat.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.HasKey("putnikID");
+
+                    b.HasIndex("AutobusBusID");
 
                     b.ToTable("Putnici");
                 });
@@ -112,9 +119,18 @@ namespace WebProjekat.Migrations
                     b.Navigation("PutnikFK");
                 });
 
+            modelBuilder.Entity("Models.Putnik", b =>
+                {
+                    b.HasOne("Models.Autobus", null)
+                        .WithMany("ListaPutnika")
+                        .HasForeignKey("AutobusBusID");
+                });
+
             modelBuilder.Entity("Models.Autobus", b =>
                 {
                     b.Navigation("ListaKarata");
+
+                    b.Navigation("ListaPutnika");
                 });
 #pragma warning restore 612, 618
         }

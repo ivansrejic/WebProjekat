@@ -13,11 +13,10 @@ namespace Models
         [Key]
         public int BusID  { get; set; }
 
-        [Required]
         [MaxLength(30)]
         public string NazivPrevoznika {get; set;}
 
-        public DateTime datumm {get; set; }
+        public string datumm {get; set; }
 
         // [Required]
         // [Range(1,16)]
@@ -25,7 +24,6 @@ namespace Models
 
         //public bool slobodnoMesto{ get; set;}
 
-        [Required]
         [MaxLength(30)]
         public string Destinacija { get; set; }
 
@@ -34,6 +32,7 @@ namespace Models
 
         [JsonIgnore]
         public virtual List<Karta> ListaKarata {get; set; }
+
 
     }
 }

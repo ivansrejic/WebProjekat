@@ -50,30 +50,14 @@ namespace Controllers
         {
             try
             {
-                var karta = await Context.Karte.Include(p=>p.PutnikFK).Include(a=>a.AutobusFK).Where(x=>x.PutnikFK.JMBG == jmbg).Select(y=>
-                new
-                {
-                    Ime = y.PutnikFK.Ime,
-                    Prezime = y.PutnikFK.Prezime,
-                    JMBG = y.PutnikFK.JMBG,
-                    Cena = y.Cena,
-                    Vreme = y.AutobusFK.datumm,
-                    Prevoznik = y.AutobusFK.NazivPrevoznika,
-                    Destinacija = y.AutobusFK.Destinacija,
-                    brojSedista = y.BrojSedista,
-
-                }).ToListAsync();
-                if(karta != null)
-                {
-                    return Ok(karta);
-                }
-                else
-                    return BadRequest("Ne postoji");
+                var karta = await Context.Karte.Include(p=>p.PutnikFK).Include(p=>p.AutobusFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
+                return Ok(karta);
             }
             catch(Exception e)
             {
                 return BadRequest(e.Message);
             }
+
         }
         
         [Route("PreuzmiKarteZaPrevoznika/{prevoznik}")]
@@ -147,6 +131,18 @@ namespace Controllers
         [HttpPost]
         public async Task<ActionResult>kupiKartu(int brSedista,string jmbg,string destinacija)
         {
+            // try
+            // {
+            //     Context.Karte.Add(karta);
+            //     await Context.SaveChangesAsync();
+            //     return Ok("Uspesno kupljena karta");
+
+            // }
+            // catch(Exception e)
+            // {
+            //     return BadRequest(e.Message);
+            // }
+            
             try
             {           
                 int cena;
@@ -198,6 +194,7 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
+
 
         [Route("IzbrisiKupljenuKartu/{jmbg}")]
         [HttpDelete]
@@ -257,5 +254,5 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
-    } // Dodaj validaciju svuda
-} // U DODAJ PUTNIKA CE DA SE PROVERI DA LI JE VEC U BAZI
+    }
+} 
