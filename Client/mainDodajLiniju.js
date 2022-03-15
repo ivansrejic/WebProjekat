@@ -1,4 +1,4 @@
-import {BusPage} from './BusPage.js';
+import {DodajLiniju} from './DodajLiniju.js';
 
-var a = new BusPage();
+var a = new DodajLiniju();
 a.crtaj(document.body);

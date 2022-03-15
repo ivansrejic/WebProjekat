@@ -7,4 +7,5 @@ export class Karta
         this.busID = busID;
         this.PutnikID = putnikID;
     }
+
 }

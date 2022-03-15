@@ -2,7 +2,7 @@ import {Autobus} from './Autobus.js';
 import {Putnik} from './Putnik.js';
 import { Karta } from './Karta.js';
 
-export class BusPage
+export class DodajLiniju
 {
     constructor()
     {
@@ -12,7 +12,7 @@ export class BusPage
         {
 
             this.kont = document.createElement("div");
-            this.kont.className = "BusKontejner";
+            this.kont.className = "BusKontejner"; //naziv klase
             host.appendChild(this.kont);
 
             var naslov = document.createElement("h1");
@@ -23,12 +23,12 @@ export class BusPage
             var destinacije = ["Beograd","Novi Sad"];
             
             var formaBus = document.createElement("div");
-            formaBus.className = "formaBus";
+            formaBus.className = "formaBus"; //naziv klase
             this.kont.appendChild(formaBus);
 
             var selectPrevoznik = document.createElement("select");
-            selectPrevoznik.className = "busDugme";
-            selectPrevoznik.id = "prevoznikSelect";
+            selectPrevoznik.className = "busDugme"; //naziv klase
+            selectPrevoznik.id = "prevoznikSelect"; // ----------- ID ------------
             formaBus.appendChild(selectPrevoznik);
             let op;
             prevoznici.forEach(x=>
@@ -39,10 +39,10 @@ export class BusPage
                 })
            
                 var selectDestinacija = document.createElement("select");
-                selectDestinacija.className = "busDugme";
-                selectDestinacija.id = "destinacijaSelect";
+                selectDestinacija.className = "busDugme"; //naziv klase
+                selectDestinacija.id = "destinacijaSelect"; // ----------- ID ------------
                 formaBus.appendChild(selectDestinacija);
-            destinacije.forEach(x=>
+                destinacije.forEach(x=>
                 {
                     op = document.createElement("option");
                     op.innerHTML = x;
@@ -50,15 +50,15 @@ export class BusPage
                 })
             
                 var datum = document.createElement("input");
-                datum.className = "busDugme";
-            datum.type = "date";
-            formaBus.appendChild(datum);
+                datum.className = "busDugme"; //naziv klase
+                datum.type = "date";
+                formaBus.appendChild(datum);
 
-            var btn = document.createElement("button");
-            btn.innerHTML = "Dodaj liniju";
-            formaBus.appendChild(btn);
+                var btn = document.createElement("button");
+                btn.innerHTML = "Dodaj liniju";
+                formaBus.appendChild(btn);
 
-            btn.onclick =(ev)=> this.dodajLiniju();
+                btn.onclick =(ev)=> this.dodajLiniju();
         }
         dodajLiniju()
         {

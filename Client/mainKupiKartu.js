@@ -1,4 +1,4 @@
-import {KartaPage} from "./KartaPage.js";
+import {KupiKartu} from "./KupiKartu.js";
 
-var a = new KartaPage();
-a.crtaj();
+var a = new KupiKartu();
+a.crtaj(document.body);

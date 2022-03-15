@@ -12,7 +12,7 @@ export class FrontPage
         {
 
             this.kont=document.createElement("div");
-            this.kont.className="GlavniKontejner";
+            this.kont.className="GlavniKontejner"; //naziv klase
             this.kont.classList.add("kont");
             host.appendChild(this.kont);
 
@@ -21,11 +21,11 @@ export class FrontPage
             this.kont.appendChild(naslov);
 
             var formaDugme = document.createElement("div");
-            formaDugme.className = "Dugme";
+            formaDugme.className = "Dugme"; //naziv klase
             this.kont.appendChild(formaDugme);
 
             var btn = document.createElement("button");
-            btn.className = "btn";
+            btn.className = "btn"; //naziv klase
             btn.innerHTML = "Dodaj liniju";
             formaDugme.appendChild(btn);
             btn.onclick = (ev)=>{
@@ -33,7 +33,7 @@ export class FrontPage
             };
 
             btn = document.createElement("button");
-            btn.className = "btn";
+            btn.className = "btn"; //naziv klase
             btn.innerHTML = "Kupovina karata";
             formaDugme.appendChild(btn);
             btn.onclick = (ev)=>{

@@ -6,6 +6,7 @@ body
 {
     display: flex;
     flex-direction: column;
+    flex-wrap:wrap;
     align-items: center;
     text-align: center;
 }
@@ -27,6 +28,7 @@ body
 }
 h1
 {
+    display:flex;
     font-size:50px;
     color: white;
 }
@@ -52,4 +54,68 @@ h1
 .busDugme {
     padding:10px;
     margin:10px;
+}
+.GlavniKontejnerKupiKartuPage 
+{
+    display:flex;
+    flex-direction: column;
+}
+.prvaForma
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin: 10px;
+    background-color:red;
+}
+.drugaForma 
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin: 10px;
+    background-color:red;
+}
+.trecaForma
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    margin: 10px;
+    background-color:red;
+}
+.KupiKartuForma
+{
+    background-color:blue;
+    height:100px;
+    width : 100px;
+}
+.FormularZaKartu
+{
+    margin: 10px;
+    display:flex;
+    flex-direction: column;
+}
+.FormularZaIzmenu
+{
+    display:flex;
+    flex-direction: column;
+    margin: 10px;
+}
+.FormularZaBrisanje
+{
+    display:flex;
+    flex-direction: column;
+    margin: 10px; 
+}
+.prikaziKarteZaBg
+{
+    height: 100px;
+    width :100px;
+    
+}
+.prikaziKarteZaNS
+{
+    height: 100px;
+    width :100px;
 }
