@@ -49,6 +49,11 @@ export class DodajLiniju
                     selectDestinacija.appendChild(op);
                 })
             
+                var registracija = document.createElement("input");
+                registracija.className = "registracijaInput"; //naziv klase
+                registracija.type = "text";
+                formaBus.appendChild(registracija);
+
                 var datum = document.createElement("input");
                 datum.className = "busDugme"; //naziv klase
                 datum.type = "date";
@@ -68,15 +73,17 @@ export class DodajLiniju
 
                 let destinacija = document.getElementById("destinacijaSelect").value;
                 
-                //alert(destinacija);
+                //alert(destinacija); //dodaj validaciju da li su uneti svi podaci
                 let datum = document.querySelector("input[type = 'date']").value;
-                alert(datum.toString());
+
+                let registracija = document.querySelector(".registracijaInput").value;
 
                     fetch("https://localhost:5001/Autobus/DodajBus/",
                         {
                             method:"POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
+                                "registracija":registracija,
                                 "nazivPrevoznika": prevoznik,
                                 "datumm": datum,
                                 "destinacija": destinacija,

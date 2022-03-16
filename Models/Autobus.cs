@@ -13,6 +13,10 @@ namespace Models
         [Key]
         public int BusID  { get; set; }
 
+        [Required]
+        [MaxLength(25)]
+        public string Registracija { get; set; }
+
         [MaxLength(30)]
         public string NazivPrevoznika {get; set;}
 

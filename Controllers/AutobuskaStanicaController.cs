@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace Controllers 
 {
@@ -210,28 +211,20 @@ namespace Controllers
         // }
 
 
-        [Route("kupiKartuFromBody/{prevoznik}/{destinacija}/{brSedista}/{datum}")] // dodaj validaciju za destinaciju, za jmbg , za broj sedista da li je izmedju 1 i 16, da li je zauzeto i tako dalje
+        [EnableCors ("CORS")]
+        [Route("kupiKartuFromBody/{registracija}/{cena}/{brSedista}")]
         [HttpPost]
-        public async Task<ActionResult>kupiKartuFromBody([FromBody]Putnik putnikk,string prevoznik,string destinacija,int brSedista,string datum) // Za ovu fju dodaj proveru da li je vec kupljena karta i to, u java scriptu tako sto ces da napravis listu u klasi, i onda kada povlacis fetch,smesti tamo i onda proveri 
+        public async Task<ActionResult>kupiKartuFromBody([FromBody]Putnik putnikk,string registracija,int cena,int brSedista)
         {
-            //Probaj da napravis validaciju da ne moze isti covek da kupi vise karata i da ne se proveri zauzetost sedista u odrejenom busu za odredjenu destinaciju
             
             try
             {           
-                int cena;
-                if(destinacija == "Beograd")
-                    {
-                         cena = 300;
-                    }
-                else
-                    {
-                         cena = 200;
-                    }
                 
-                var kupljenaKarta = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == putnikk.JMBG).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Destinacija == destinacija).FirstOrDefaultAsync();
-                var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).Where(x=>x.NazivPrevoznika == prevoznik).Where(x=>x.datumm == datum).FirstOrDefaultAsync();
+                var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == putnikk.JMBG).FirstOrDefaultAsync();
+                var bus = await Context.Autobusi.Where(x=>x.Registracija == registracija).FirstOrDefaultAsync();
+                var zauzetoMesto = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Registracija == registracija).FirstOrDefaultAsync();
                 
-                if(kupljenaKarta == null)
+                if(kupljenaKarta == null && zauzetoMesto == null )
                 {
                                     Karta k = new Karta
                                         {
@@ -247,7 +240,7 @@ namespace Controllers
                     }
                     else
                     {
-                        return BadRequest("Putnik je vec kupio kartu");
+                        return BadRequest("Putnik je vec kupio kartu ili je mesto zauzeto");
                     }          
             }
             catch(Exception e)

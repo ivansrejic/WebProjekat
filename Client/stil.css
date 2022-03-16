@@ -64,9 +64,10 @@ h1
 {
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     flex-wrap:wrap;
     margin: 10px;
-    background-color:red;
+    
 }
 .drugaForma 
 {
@@ -74,7 +75,7 @@ h1
     flex-direction: row;
     flex-wrap:wrap;
     margin: 10px;
-    background-color:red;
+    
 }
 .trecaForma
 {
@@ -82,7 +83,7 @@ h1
     flex-direction: row;
     flex-wrap:wrap;
     margin: 10px;
-    background-color:red;
+    
 }
 .KupiKartuForma
 {
@@ -92,18 +93,21 @@ h1
 }
 .FormularZaKartu
 {
+    border: 10px solid black;
     margin: 10px;
     display:flex;
     flex-direction: column;
 }
 .FormularZaIzmenu
 {
+    border: 10px solid black;
     display:flex;
     flex-direction: column;
     margin: 10px;
 }
 .FormularZaBrisanje
 {
+    border: 10px solid black;
     display:flex;
     flex-direction: column;
     margin: 10px; 
@@ -118,4 +122,15 @@ h1
 {
     height: 100px;
     width :100px;
+}
+.FormularZaAutobus
+{
+    display:flex;
+    flex-direction: column;
+    margin: 10px;
+}
+table,th,tr,td{
+    border: 2px solid black;
+    color: black;
+    background-color:white;
 }
