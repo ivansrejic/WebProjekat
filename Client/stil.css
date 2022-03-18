@@ -72,7 +72,8 @@ h1
 .drugaForma 
 {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: flex-start;
     flex-wrap:wrap;
     margin: 10px;
     
@@ -133,4 +134,32 @@ table,th,tr,td{
     border: 2px solid black;
     color: black;
     background-color:white;
+    margin: 10px;
+}
+.labelPrevoznik,.labelDestinacija,.labelDatum{
+    color: white;
+    margin-top: 10px;
+}
+.tabelaZaKarteDestinacija
+{
+    border: 10px solid black;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.divZaDugmice
+{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    align-items: center;
+}
+.selectDestinacija2,#prikaziKarteDugmeID
+{
+    width:200px;
+}
+.divZaTabelu
+{
+    display:flex;
+    justify-content: center;
 }

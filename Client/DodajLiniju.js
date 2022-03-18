@@ -21,10 +21,18 @@ export class DodajLiniju
 
             var prevoznici = ["Litas","Lasta","NisExpress"];
             var destinacije = ["Beograd","Novi Sad"];
+
+            
+            
             
             var formaBus = document.createElement("div");
             formaBus.className = "formaBus"; //naziv klase
             this.kont.appendChild(formaBus);
+
+            var labelPrevoznik = document.createElement("label");
+            labelPrevoznik.innerHTML = "Prevoznik";
+            labelPrevoznik.className = "labelPrevoznik";
+            formaBus.appendChild(labelPrevoznik);
 
             var selectPrevoznik = document.createElement("select");
             selectPrevoznik.className = "busDugme"; //naziv klase
@@ -38,32 +46,43 @@ export class DodajLiniju
                     selectPrevoznik.appendChild(op);
                 })
            
-                var selectDestinacija = document.createElement("select");
-                selectDestinacija.className = "busDugme"; //naziv klase
-                selectDestinacija.id = "destinacijaSelect"; // ----------- ID ------------
-                formaBus.appendChild(selectDestinacija);
-                destinacije.forEach(x=>
-                {
-                    op = document.createElement("option");
-                    op.innerHTML = x;
-                    selectDestinacija.appendChild(op);
-                })
+            var labelDestinacija = document.createElement("label");
+            labelDestinacija.innerHTML = "Destinacija";
+            labelDestinacija.className = "labelDestinacija";
+            formaBus.appendChild(labelDestinacija);
             
-                var registracija = document.createElement("input");
-                registracija.className = "registracijaInput"; //naziv klase
-                registracija.type = "text";
-                formaBus.appendChild(registracija);
+            var selectDestinacija = document.createElement("select");
+            selectDestinacija.className = "busDugme"; //naziv klase
+            selectDestinacija.id = "destinacijaSelect"; // ----------- ID ------------
+            formaBus.appendChild(selectDestinacija);
+            destinacije.forEach(x=>
+            {
+                op = document.createElement("option");
+                op.innerHTML = x;
+                selectDestinacija.appendChild(op);
+            })
+        
+            var registracija = document.createElement("input");
+            registracija.className = "registracijaInput"; //naziv klase
+            registracija.type = "text";
+            registracija.placeholder = "REGISTRACIJA";
+            formaBus.appendChild(registracija);
 
-                var datum = document.createElement("input");
-                datum.className = "busDugme"; //naziv klase
-                datum.type = "date";
-                formaBus.appendChild(datum);
+            var labelDatum = document.createElement("label");
+            labelDatum.innerHTML = "Datum";
+            labelDatum.className = "labelDatum";
+            formaBus.appendChild(labelDatum);
 
-                var btn = document.createElement("button");
-                btn.innerHTML = "Dodaj liniju";
-                formaBus.appendChild(btn);
+            var datum = document.createElement("input");
+            datum.className = "busDugme"; //naziv klase
+            datum.type = "date";
+            formaBus.appendChild(datum);
 
-                btn.onclick =(ev)=> this.dodajLiniju();
+            var btn = document.createElement("button");
+            btn.innerHTML = "Dodaj liniju";
+            formaBus.appendChild(btn);
+
+            btn.onclick =(ev)=> this.dodajLiniju();
         }
         dodajLiniju()
         {
@@ -78,6 +97,16 @@ export class DodajLiniju
 
                 let registracija = document.querySelector(".registracijaInput").value;
 
+                if(registracija === null || registracija ===undefined || registracija==="")
+                {
+                    alert("Unesite ispravnu registraciju");
+                }
+                else if(datum === "")
+                {
+                    alert("Uneesite datum");
+                }
+                else
+                {
                     fetch("https://localhost:5001/Autobus/DodajBus/",
                         {
                             method:"POST",
@@ -98,4 +127,6 @@ export class DodajLiniju
                                     alert("Greska.");
                             })
                         }
+                }
+              
 }  

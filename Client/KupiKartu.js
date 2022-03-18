@@ -37,11 +37,10 @@ export class KupiKartu
         drugaForma.className = "drugaForma"; //naziv klase
         host.appendChild(drugaForma);
 
-        var prikaziKarteZaBg = document.createElement("button");
-        prikaziKarteZaBg.className = "prikaziKarteZaBg"; //naziv klase
-        prikaziKarteZaBg.id = "prikaziKarteZaBgID"; // ----------- ID ------------
-        prikaziKarteZaBg.innerHTML = "PRIKAZI KARTE ZA BGGG";
-        drugaForma.appendChild(prikaziKarteZaBg);
+        this.crtajDivZaTabelu(drugaForma);
+        
+
+        //this.crtajTabeluKarata(drugaForma);
     }
     crtajTrecuFormu(host)
     {
@@ -66,39 +65,14 @@ export class KupiKartu
         inputs.forEach(x=>
             {
                 var input = document.createElement("input");
+                input.type = "text";
                 input.className = "ProzorZaKucanje"; //naziv klase
                 input.id = x; // ----------- ID ------------
                 input.placeholder = x;
                 formularZaKartu.appendChild(input);
             })
 
-        // var prevoznikOptions = ["Litas","NisExpess","Lasta"];
-        // var destinacijaOptions = ["Beograd","Novi Sad"];
-
-        // var prevoznikSelect = document.createElement("select");
-        // prevoznikSelect.className = "prevoznikSelect"; //naziv klase
-        // prevoznikSelect.id = "prevoznikSelectID"; // ----------- ID ------------
-        // formularZaKartu.appendChild(prevoznikSelect);
-
-        // var destinacijaSelect = document.createElement("select");
-        // destinacijaSelect.className = "destinacijaSelect"; //naziv klase
-        // destinacijaSelect.id = "destinacijaSelectID"; // ----------- ID ------------
-        // formularZaKartu.appendChild(destinacijaSelect);
-
-        // let op;
-        
-        // prevoznikOptions.forEach(x=>
-        //     {
-        //         op = document.createElement("option");
-        //         op.innerHTML = x;
-        //         prevoznikSelect.appendChild(op);
-        //     })
-        // destinacijaOptions.forEach(x=>
-        //     {
-        //         op = document.createElement("option");
-        //         op.innerHTML = x;
-        //         destinacijaSelect.appendChild(op);
-        //     })
+      
         var brSedistaInput = document.createElement("input");
         brSedistaInput.type = "number";
         brSedistaInput.className = "brSedistaInput"; //naziv klase
@@ -170,7 +144,7 @@ export class KupiKartu
         var jmbgZaBrisanje = document.createElement("input");
         jmbgZaBrisanje.type = "text";
         jmbgZaBrisanje.className = "jmbgZaBrisanje"; //naziv klase
-        jmbgZaBrisanje.id = "dugmeZaBrisanjeID"; // ----------- ID ------------
+        jmbgZaBrisanje.id = "jmbgZaBrisanjeID"; // ----------- ID ------------
         jmbgZaBrisanje.placeholder = "JMBG";
         formularZaBrisanje.appendChild(jmbgZaBrisanje);
 
@@ -231,12 +205,43 @@ export class KupiKartu
         let registracija = document.querySelector(".registracijaInput").value; 
         let brSedista = document.querySelector(".brSedistaInput").value;
         let cena = document.querySelector(".cenaInput").value;
-        //var datum = document.querySelector("input[type = 'date']").value;
+        
+        
+        let datum = document.querySelector("input[type = 'date']").value;
 
         // DODAJ VALIDACIJU ZA UNETE INFORMACIJE, da li su prazna polja, da li je jmbg == 13
 
-
-        fetch("https://localhost:5001/AutobuskaStanica/kupiKartuFromBody/"+registracija+"/"+cena+"/"+brSedista,
+        if(ime === "")
+        {
+            alert("Unesite ime");
+        }
+        else if(prezime === "")
+        {
+            alert("Unesite prezime");
+        }
+        else if(jmbg == null || jmbg.length != 13)
+        {
+            alert("Neispravan jmbg");
+        }
+        else if(brSedista < 1 || brSedista > 16)
+        {
+            alert("Neispravno polje za odabir sedista");
+        }
+        else if(registracija === "")
+        {
+            alert("Unesite registraciju");
+        }
+        else if(cena == null || cena > 2000 || cena < 100)
+        {
+            alert("Unesite ispravnu cenu ");
+        }
+        else if(datum == "")
+        {
+            alert("Popunite polje za datuym");
+        }
+        else
+        {
+            fetch("https://localhost:5001/AutobuskaStanica/kupiKartuFromBody/"+registracija+"/"+cena+"/"+brSedista,
                         {
                             method:"POST",
                             headers: { "Content-Type": "application/json" },
@@ -252,16 +257,28 @@ export class KupiKartu
                                     alert("Uspeno");
                                 }
                                 else
-                                    alert("Greska.");
+                                    alert("Greska. Proverite ponovo polja");
                             })
         }
+
+    }
         
-        izmeniBrojSedista()
+    izmeniBrojSedista()
         {
             var jmbg = document.querySelector(".jmbgZaPromenu").value;
             var noviBrSedista = document.querySelector(".brSedistaZaPromenu").value;
 
-            fetch("https://localhost:5001/AutobuskaStanica/IzmeniBrojSedista/"+jmbg+"/"+noviBrSedista,
+            if(jmbg == null || jmbg.length != 13)
+            {
+                alert("Neispravan jmbg");
+            }
+            else if(noviBrSedista < 1 || noviBrSedista > 16)
+            {
+                alert("Neispravno polje za odabir sedista");
+            }
+            else
+            {
+                fetch("https://localhost:5001/AutobuskaStanica/IzmeniBrojSedista/"+jmbg+"/"+noviBrSedista,
                         {
                             method:"PUT"
 
@@ -274,13 +291,21 @@ export class KupiKartu
                                 else
                                     alert("Greska.");
                             })
-        }
+            }
 
-        izbrisiKartu()
+    }
+
+    izbrisiKartu()
         {
             var jmbg = document.querySelector(".jmbgZaBrisanje").value;
 
-            fetch("https://localhost:5001/AutobuskaStanica/IzbrisiKupljenuKartu/"+jmbg,
+            if(jmbg == null || jmbg.length != 13)
+            {
+                alert("Neispravan jmbg");
+            }
+            else
+            {
+                fetch("https://localhost:5001/AutobuskaStanica/IzbrisiKupljenuKartu/"+jmbg,
                 {
                     method:"DELETE"
                 }).then(p=>
@@ -291,16 +316,23 @@ export class KupiKartu
                         }
                         else
                         {
-                            alert("greskica");
+                            alert("Doslo je do greske, ili ne postoji putnik sa tim jmbgom");
                         }
                     })
+            }
             
-        }
-        prikaziAutobuseZaDatum(host)
+    }
+    prikaziAutobuseZaDatum(host)
         {
             var datum = document.querySelector(".datumZaAutobus").value;
-            
-            fetch("https://localhost:5001/Autobus/PreuzmiAutobuse/"+datum,
+
+            if (datum == "")
+            {
+                alert ("Popunite polje za datum");
+            }
+            else
+            {
+                fetch("https://localhost:5001/Autobus/PreuzmiAutobuse/"+datum,
             {
                 method:"GET"
             }).then(p=>
@@ -326,9 +358,11 @@ export class KupiKartu
                         alert("NIje uspesno");
                     }
                 })
-        }
+            }
+            
+    }
 
-        obrisiPrethodnuTabelu()
+    obrisiPrethodnuTabelu()
         {
             var body = document.querySelector(".tableBody");
             var parent = body.parentNode;
@@ -336,6 +370,106 @@ export class KupiKartu
 
             body = document.createElement("tbody");
             body.className="tableBody";
+            parent.appendChild(body);
+
+            //return body; 
+        }
+
+    crtajDivZaTabelu(host)
+    {
+        var divZaDugmice = document.createElement("div");
+        divZaDugmice.className = "divZaDugmice";
+        host.appendChild(divZaDugmice);
+
+        var divZaTabelu = document.createElement("div");
+        divZaTabelu.className = "divZaTabelu";
+        host.appendChild(divZaTabelu);
+
+        var selectDestinacija = document.createElement("select");
+        selectDestinacija.className = "selectDestinacija2";
+        divZaDugmice.appendChild(selectDestinacija);
+    
+        let op;
+        let destinacije = ["Beograd","Novi Sad"];
+        destinacije.forEach(x=>
+        {
+            op = document.createElement("option");
+            op.innerHTML = x;
+            selectDestinacija.appendChild(op);
+        }
+        )
+
+        var prikaziKarteDugme = document.createElement("button");
+        prikaziKarteDugme.className = "prikaziKarteDugme"; //naziv klase
+        prikaziKarteDugme.id = "prikaziKarteDugmeID"; // ----------- ID ------------
+        prikaziKarteDugme.innerHTML = "prikaziKarteZaDestinaciju";
+        divZaDugmice.appendChild(prikaziKarteDugme);
+        prikaziKarteDugme.onclick = (ev) => this.prikaziKarteZaDestinaciju(tableBody);
+
+        var tabela = document.createElement("table");
+        divZaTabelu.appendChild(tabela);
+
+        var tableHead = document.createElement("thead");
+        tabela.appendChild(tableHead);
+
+        var tableRow = document.createElement("tr");
+        tabela.appendChild(tableRow);
+
+        var tableBody = document.createElement("tbody");
+        tableBody.className = "tableBody2";
+        tabela.appendChild(tableBody);
+
+        let th;
+        var kolone = ["IME","PREZIME","JMBG","PREVOZNIK","DESTINACIJA","BROJ SEDISTA","DATUM","CENA"];
+        kolone.forEach(x=>
+            {
+                th = document.createElement("th");
+                th.innerHTML = x;
+                tableRow.appendChild(th);
+            })
+    }
+        prikaziKarteZaDestinaciju(host)
+        {
+            var destinacija = document.querySelector(".selectDestinacija2").value;
+
+            fetch("https://localhost:5001/AutobuskaStanica/PreuzmiKarteZaDestinaciju"+"/"+destinacija,
+            {
+                method:"GET"
+            }).then(p=>
+                {
+                    if(p.ok)
+                    {
+                        this.obrisiPrethodnuTabelu2();
+
+                        p.json().then(data => {
+                            var body = document.querySelector(".tableBody2");
+
+                            data.forEach(x => 
+                                {
+                                    var ticket = new Karta(x.prevoznik,x.destinacija,x.datum,x.brojSedista,x.cena);
+                                    ticket.ime = x.ime;
+                                    ticket.prezime = x.prezime;
+                                    ticket.jmbg = x.jmbg;
+                                    //console.log(ticket);
+                                    ticket.crtajTabeluKarata(body);
+                                })
+                        })
+                    }
+                    else
+                    {
+                        alert("NIje uspesno");
+                    }
+                })
+        }
+
+        obrisiPrethodnuTabelu2()
+        {
+            var body = document.querySelector(".tableBody2");
+            var parent = body.parentNode;
+            parent.removeChild(body);
+
+            body = document.createElement("tbody");
+            body.className="tableBody2";
             parent.appendChild(body);
 
             //return body; 

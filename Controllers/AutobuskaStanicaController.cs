@@ -107,7 +107,7 @@ namespace Controllers
                     Prezime = y.PutnikFK.Prezime,
                     JMBG = y.PutnikFK.JMBG,
                     Cena = y.Cena,
-                    Vreme = y.AutobusFK.datumm,
+                    Datum = y.AutobusFK.datumm,
                     Prevoznik = y.AutobusFK.NazivPrevoznika,
                     Destinacija = y.AutobusFK.Destinacija,
                     brojSedista = y.BrojSedista,
@@ -220,11 +220,12 @@ namespace Controllers
             try
             {           
                 
+                //proveri da li je vec kupljena karta, da li postoji bus sa tom registracijom i da li je slobodno sediste u tom busu
                 var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == putnikk.JMBG).FirstOrDefaultAsync();
                 var bus = await Context.Autobusi.Where(x=>x.Registracija == registracija).FirstOrDefaultAsync();
                 var zauzetoMesto = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Registracija == registracija).FirstOrDefaultAsync();
                 
-                if(kupljenaKarta == null && zauzetoMesto == null )
+                if(kupljenaKarta == null && zauzetoMesto == null && bus != null )
                 {
                                     Karta k = new Karta
                                         {
