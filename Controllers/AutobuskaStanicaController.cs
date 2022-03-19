@@ -35,6 +35,7 @@ namespace Controllers
                     Cena = x.Cena,
                     Vreme = x.AutobusFK.datumm,
                     Prevoznik = x.AutobusFK.NazivPrevoznika,
+                    Registracija = x.AutobusFK.Registracija,
                     Destinacija = x.AutobusFK.Destinacija,
                     brojSedista = x.BrojSedista,
                 }).ToListAsync());
@@ -109,6 +110,7 @@ namespace Controllers
                     Cena = y.Cena,
                     Datum = y.AutobusFK.datumm,
                     Prevoznik = y.AutobusFK.NazivPrevoznika,
+                    Registracija = y.AutobusFK.Registracija,
                     Destinacija = y.AutobusFK.Destinacija,
                     brojSedista = y.BrojSedista,
                 }).ToListAsync();
@@ -212,20 +214,33 @@ namespace Controllers
 
 
         [EnableCors ("CORS")]
-        [Route("kupiKartuFromBody/{registracija}/{cena}/{brSedista}")]
+        [Route("kupiKartuFromBody/{registracija}/{datum}/{cena}/{brSedista}")]
         [HttpPost]
-        public async Task<ActionResult>kupiKartuFromBody([FromBody]Putnik putnikk,string registracija,int cena,int brSedista)
+        public async Task<ActionResult>kupiKartuFromBody([FromBody]Putnik putnikk,string registracija,string datum,int cena,int brSedista)
         {
             
             try
             {           
                 
-                //proveri da li je vec kupljena karta, da li postoji bus sa tom registracijom i da li je slobodno sediste u tom busu
+                //proveri da li je vec kupljena karta, da li postoji bus sa tom registracijom i da ide tog datuma i da li je slobodno sediste u tom busu
                 var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == putnikk.JMBG).FirstOrDefaultAsync();
-                var bus = await Context.Autobusi.Where(x=>x.Registracija == registracija).FirstOrDefaultAsync();
-                var zauzetoMesto = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Registracija == registracija).FirstOrDefaultAsync();
+                var bus = await Context.Autobusi.Where(x=>x.Registracija == registracija).Where(x=>x.datumm == datum).FirstOrDefaultAsync();
+                var zauzetoMesto = await Context.Karte.Where(x=>x.BrojSedista == brSedista).Include(x=>x.AutobusFK).Where(x=>x.AutobusFK.Registracija == registracija).Where(x=>x.AutobusFK.datumm == datum).FirstOrDefaultAsync();
                 
-                if(kupljenaKarta == null && zauzetoMesto == null && bus != null )
+                //if(kupljenaKarta == null && zauzetoMesto == null && bus != null )
+                if(kupljenaKarta != null)
+                {
+                    return BadRequest("Putnik je vec kupio kartu");
+                }
+                else if(zauzetoMesto != null)
+                {
+                    return BadRequest("Mesto je zauzeto");
+                }
+                else if(bus == null)
+                {
+                    return BadRequest("Ne postoji izabrana autobuska linija");
+                }
+                else
                 {
                                     Karta k = new Karta
                                         {
@@ -238,11 +253,7 @@ namespace Controllers
                                     await Context.SaveChangesAsync();
                                     return Ok("Uspesno");
                                 
-                    }
-                    else
-                    {
-                        return BadRequest("Putnik je vec kupio kartu ili je mesto zauzeto");
-                    }          
+                }        
             }
             catch(Exception e)
             {
@@ -260,9 +271,11 @@ namespace Controllers
                 if(jmbg!=null && jmbg.Length==13)
                 {
                     var karta = await Context.Karte.Include(p=>p.PutnikFK).Include(h=>h.AutobusFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
+                    var putnik = await Context.Putnici.Where(x=>x.JMBG == jmbg).FirstOrDefaultAsync();
                     if(karta != null)
                     {
                         Context.Karte.Remove(karta);
+                        Context.Putnici.Remove(putnik);
                         await Context.SaveChangesAsync();
                         return Ok("Uspesno obrisana karta");
                     }
@@ -309,5 +322,36 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
-    }
+
+        [Route("VratiSedista/{registracija}/{destinacija}/{datum}")]
+        [HttpGet]
+        public async Task<ActionResult> vratiSedista(string registracija,string destinacija,string datum)
+        {
+            var bus = await Context.Autobusi.Where(x=>x.Registracija == registracija).Where(x=>x.Destinacija == destinacija).Where(x=>x.datumm == datum).FirstOrDefaultAsync();
+            var listaSedista = await Context.Karte.Include(p=>p.AutobusFK).Where(p=>p.AutobusFK.Registracija == registracija).Where(x=>x.AutobusFK.Destinacija == destinacija).Where(x=>x.AutobusFK.datumm == datum).Select(p=>p.BrojSedista).ToListAsync();
+            try
+            {
+                if(bus != null)
+                {
+                    if(listaSedista != null)
+                    {
+                    return Ok(listaSedista);
+                    }
+                    else
+                    {
+                        return BadRequest("prazna lsita"); // promeni ovo posle, da napise nesto smisleno
+                    }  
+                }
+                else
+                {
+                    return BadRequest("Greska");
+                }
+                
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+    }   
 } 

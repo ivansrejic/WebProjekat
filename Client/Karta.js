@@ -13,6 +13,8 @@ export class Karta
         this.ime = null;
         this.prezime = null;
         this.jmbg = null;
+
+        this.registracija == null;
     }
 
         crtajTabeluKarata(host) 
@@ -36,8 +38,13 @@ export class Karta
             td.innerHTML = this.prevoznik;
             tr.appendChild(td);
 
+
             td = document.createElement("td");
             td.innerHTML = this.destinacija;
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            td.innerHTML = this.registracija;
             tr.appendChild(td);
 
             td = document.createElement("td");

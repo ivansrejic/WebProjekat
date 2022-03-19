@@ -16,8 +16,9 @@ export class KupiKartu
 
         
         this.crtajPrvuFormu(kontejner);
-        this.crtajDruguFormu(kontejner);
         this.crtajTrecuFormu(kontejner);
+        this.crtajDruguFormu(kontejner);
+        
         
     }
     crtajPrvuFormu(host)
@@ -48,11 +49,35 @@ export class KupiKartu
         trecaForma.className = "trecaForma"; //naziv klase
         host.appendChild(trecaForma);
 
-        var prikaziKarteZaNS = document.createElement("button");
-        prikaziKarteZaNS.className = "prikaziKarteZaNS"; //naziv klase
-        prikaziKarteZaNS.id = "prikaziKarteZaNSID"; // ----------- ID ------------
-        prikaziKarteZaNS.innerHTML = "PRIKAZI KARTE ZA NOVI SAD";
-        trecaForma.appendChild(prikaziKarteZaNS);
+        var registracijaSlobodnaMesta = document.createElement("input");
+        registracijaSlobodnaMesta.type = "text";
+        registracijaSlobodnaMesta.placeholder = "REGISTRACIJA";
+        registracijaSlobodnaMesta.className = "registracijaSlobodnaMesta";
+        trecaForma.appendChild(registracijaSlobodnaMesta);
+
+        var prikaziSlobodnaMestaDestinacija = document.createElement("input");
+        prikaziSlobodnaMestaDestinacija.type = "text";
+        prikaziSlobodnaMestaDestinacija.className = "prikaziSlobodnaMestaDestinacija";
+        prikaziSlobodnaMestaDestinacija.placeholder = "DESTINACIJA";
+        trecaForma.appendChild(prikaziSlobodnaMestaDestinacija);
+
+        var prikaziSlobodnaMestaDatum = document.createElement("input");
+        prikaziSlobodnaMestaDatum.className = "prikaziSlobodnaMestaDatum";
+        prikaziSlobodnaMestaDatum.type = "date";
+        trecaForma.appendChild(prikaziSlobodnaMestaDatum);
+     
+        var prikaziSlobodnaMesta = document.createElement("button");
+        prikaziSlobodnaMesta.className = "prikaziSlobodnaMesta"; //naziv klase
+        prikaziSlobodnaMesta.id = "prikaziSlobodnaMestaID"; // ----------- ID ------------
+        prikaziSlobodnaMesta.innerHTML = "prikaziSlobodnaMesta";
+        trecaForma.appendChild(prikaziSlobodnaMesta);
+
+        var autobusDiv = document.createElement("div");
+        autobusDiv.className = "autobusDiv";
+        trecaForma.appendChild(autobusDiv);
+
+        prikaziSlobodnaMesta.onclick = (ev) => this.prikaziSlobodnaMestaUAutobusu();
+
     }
 
     crtajFormularZaKartu(host)
@@ -241,7 +266,7 @@ export class KupiKartu
         }
         else
         {
-            fetch("https://localhost:5001/AutobuskaStanica/kupiKartuFromBody/"+registracija+"/"+cena+"/"+brSedista,
+            fetch("https://localhost:5001/AutobuskaStanica/kupiKartuFromBody/"+registracija+"/"+datum+"/"+cena+"/"+brSedista,
                         {
                             method:"POST",
                             headers: { "Content-Type": "application/json" },
@@ -322,7 +347,7 @@ export class KupiKartu
             }
             
     }
-    prikaziAutobuseZaDatum(host)
+    prikaziAutobuseZaDatum()
         {
             var datum = document.querySelector(".datumZaAutobus").value;
 
@@ -404,7 +429,7 @@ export class KupiKartu
         prikaziKarteDugme.id = "prikaziKarteDugmeID"; // ----------- ID ------------
         prikaziKarteDugme.innerHTML = "prikaziKarteZaDestinaciju";
         divZaDugmice.appendChild(prikaziKarteDugme);
-        prikaziKarteDugme.onclick = (ev) => this.prikaziKarteZaDestinaciju(tableBody);
+        prikaziKarteDugme.onclick = (ev) => this.prikaziKarteZaDestinaciju();
 
         var tabela = document.createElement("table");
         divZaTabelu.appendChild(tabela);
@@ -420,7 +445,7 @@ export class KupiKartu
         tabela.appendChild(tableBody);
 
         let th;
-        var kolone = ["IME","PREZIME","JMBG","PREVOZNIK","DESTINACIJA","BROJ SEDISTA","DATUM","CENA"];
+        var kolone = ["IME","PREZIME","JMBG","PREVOZNIK","DESTINACIJA","REGISTRACIJA","BROJ SEDISTA","DATUM","CENA"];
         kolone.forEach(x=>
             {
                 th = document.createElement("th");
@@ -428,7 +453,7 @@ export class KupiKartu
                 tableRow.appendChild(th);
             })
     }
-        prikaziKarteZaDestinaciju(host)
+        prikaziKarteZaDestinaciju()
         {
             var destinacija = document.querySelector(".selectDestinacija2").value;
 
@@ -450,6 +475,7 @@ export class KupiKartu
                                     ticket.ime = x.ime;
                                     ticket.prezime = x.prezime;
                                     ticket.jmbg = x.jmbg;
+                                    ticket.registracija = x.registracija;
                                     //console.log(ticket);
                                     ticket.crtajTabeluKarata(body);
                                 })
@@ -473,5 +499,51 @@ export class KupiKartu
             parent.appendChild(body);
 
             //return body; 
+        }
+
+        prikaziSlobodnaMestaUAutobusu(host)
+        {
+            var registracija = document.querySelector(".registracijaSlobodnaMesta").value;
+            var destinacija = document.querySelector(".prikaziSlobodnaMestaDestinacija").value;
+            var datum = document.querySelector(".prikaziSlobodnaMestaDatum").value;
+            
+
+            fetch("https://localhost:5001/AutobuskaStanica/VratiSedista"+"/"+registracija+"/"+destinacija+"/"+datum,
+            {
+                method:"GET"
+            }).then(p=>
+                {
+                    if(p.ok)
+                    {
+                        var bus = new Autobus();
+                        
+                        p.json().then(data => 
+                            {
+                                data.forEach(x=>{
+                                    bus.listaSedista.push(x);
+                                })
+                                
+                                this.obrisiAutobus();
+                                var busDiv = document.querySelector(".autobusDiv");
+                                
+                                bus.crtajBus(busDiv);
+                                //alert(bus.listaSedista);
+                            })
+                    }
+                    else
+                    {
+                        alert("ne valja");
+                    }
+                })
+        }
+        obrisiAutobus()
+        {
+            var busDiv = document.querySelector(".autobusDiv");
+            var parent = busDiv.parentNode;
+            parent.removeChild(busDiv);
+
+            busDiv = document.createElement("div");
+            busDiv.className = "autobusDiv";
+            parent.appendChild(busDiv);
         }
     }
