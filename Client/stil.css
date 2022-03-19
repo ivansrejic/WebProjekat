@@ -10,72 +10,84 @@ body
     align-items: center;
     text-align: center;
 }
-.Dugme
-{
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid black;
-    width: 150px;
-    margin: 10px;
-    padding: 20px;
-}
-.btn
-{
-    padding:10px;
-    margin:10px;
-}
-h1
-{
-    display:flex;
-    font-size:50px;
-    color: white;
-}
-.BusKontejner
-{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-.formaBus
-{
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid black;
-    width: 150px;
-    margin: 10px;
-    padding: 20px;
-    background-color: red;
-}
-.busDugme {
-    padding:10px;
-    margin:10px;
-}
-.GlavniKontejnerKupiKartuPage 
-{
-    display:flex;
-    flex-direction: column;
-}
 .prvaForma
 {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap:wrap;
-    margin: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid white;
+    border-radius: 30px;
     
+}
+.Dugme
+{
+    Display: flex;
+    flex-direction: column;
+    margin:60px;
+    border-bottom: 2px solid white;
+    border-top: 2px solid white;
+    border-radius: 30px;
+}
+h1
+{
+    display: flex;
+    justify-content: center;
+    font-size:55px;
+    color: white;
+    border-bottom: 2px solid;
+    text-align: center;
+}
+.btn
+{
+    border-radius: 20px;
+    background-color:black;
+    margin:40px;
+    color:white;
+    font-size: 26px;
+    align-self: center;
+    width: fit-content;
+}
+.BusKontejner
+{
+    Display: flex;
+    flex-direction:column;
+    align-self:center;
+}
+.formaBus
+{
+    Display: flex;
+    flex-direction: column;
+    align-self: center;
+}
+[class^="label"]{
+    color:white;
+    text-align: center;
+}
+.dugmence{
+    border-radius: 100px;
+    background-color:black;
+    margin:10px;
+    width: fit-content;
+    color:white;
+    font-size: 26px;
+    align-self: center;
+}
+.busDugme{
+    text-align: center;
+    margin:10px;
 }
 .drugaForma 
 {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     flex-wrap:wrap;
-    margin: 10px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-items: center;
+    text-align: center;
+    margin-top:50px;
     
 }
 .trecaForma
@@ -83,7 +95,9 @@ h1
     display: flex;
     flex-direction: column;
     flex-wrap:wrap;
+    align-self: center;
     margin: 10px;
+    border-radius:30px;
     
 }
 .KupiKartuForma
@@ -94,41 +108,60 @@ h1
 }
 .FormularZaKartu
 {
-    border: 10px solid black;
+    border-top:white solid;
+    border-bottom:white solid;
     margin: 10px;
     display:flex;
     flex-direction: column;
+    height:fit-content;
+    width: fit-content;
+    border-radius:30px;
 }
 .FormularZaIzmenu
 {
-    border: 10px solid black;
+    border-top:white solid;
+    border-bottom:white solid;
     display:flex;
     flex-direction: column;
     margin: 10px;
+    flex-grow: 0;
+    flex-shrink: 1;
+    height:fit-content;
+    width: fit-content;
+    border-radius:30px;
 }
 .FormularZaBrisanje
 {
-    border: 10px solid black;
+    border-top:white solid;
+    border-bottom:white solid;
     display:flex;
     flex-direction: column;
+    justify-content:space-between;
     margin: 10px; 
+    height:fit-content;
+    border-radius:30px;
+    width: fit-content;
 }
 .FormularZaAutobus
 {
+    border-top:white solid;
+    border-bottom:white solid;
     display:flex;
     flex-direction: column;
     margin: 10px;
+    height:fit-content;
+    width: 400px;
+    border-radius:30px;
 }
 th,td{
-    border: 2px solid black;
-    color: black;
-    background-color:white;
-    margin: 10px;
-    border-radius: 10px;
-    font-size:16px;
+
+    border-radius: 7px;
+    font-size:18px;
+    text-align: center;
+    background-color:black;
+    color:white;   
 }
 .labelPrevoznik,.labelDestinacija,.labelDatum{
-    color: white;
     margin-top: 10px;
 }
 .tabelaZaKarteDestinacija
@@ -141,33 +174,74 @@ th,td{
 .divZaDugmice
 {
     display: flex;
+    justify-content:center;
     flex-direction: column;
+    align-self: center;
     margin: 10px;
-    align-items: center;
-}
-.selectDestinacija2,#prikaziKarteDugmeID
-{
-    width:200px;
+    border-radius:30px;
+    width: fit-content;
+    height:fit-content;
 }
 .divZaTabelu
 {
     display:flex;
-    justify-content: center;
+    justify-content:center;
+    flex-wrap:wrap;
 }
 .autobusDiv{
     display:flex;
     align-self: center;
     flex-direction: column;
-    background-color:red;
+    background-color:white;
+    border-radius: 10px;
 }
 .busRed{
     display:flex;
     flex-direction:row;
-    background-color:blue;
     margin:10px;
 }
 .kockica{
-    height:20px;
-    width:20px;
+    height:30px;
+    width:30px;
     margin:10px;
 }
+.registracijaSlobodnaMesta,.prikaziSlobodnaMestaDestinacija,.prikaziSlobodnaMestaDatum,.ProzorZaKucanje,.brSedistaInput,.registracijaInput,.cenaInput,.datumInput,.jmbgZaPromenu,.brSedistaZaPromenu,.jmbgZaBrisanje,.selectDestinacija2,.datumZaAutobus {
+    font-weight: bold;
+    color:black;
+    border:none;
+    border-radius:20px;
+    width:200px;
+    align-self: center;
+    margin:5px;
+    text-align: center;
+}
+.dugmeZaKupovinuKarte,.dugmeZaProveruAutobusa,.dugmeZaIzmenu,.dugmeZaBrisanje,.prikaziKarteDugme,.prikaziSlobodnaMesta{
+    border-radius: 100px;
+    background-color:black;
+    margin:10px;
+    color:white;
+    font-size: 18px;
+    align-self: center;
+    width: fit-content;
+}
+
+@media screen and (max-width: 600px) {
+    th,td{
+
+        border-radius: 7px;
+        font-size:11px;
+        text-align: center;
+        background-color:black;
+        color:white;   
+    }
+    .dugmeZaKupovinuKarte,.dugmeZaProveruAutobusa,.dugmeZaIzmenu,.dugmeZaBrisanje,.prikaziKarteDugme,.prikaziSlobodnaMesta{
+        border-radius: 100px;
+        background-color:black;
+        margin:10px;
+        width: fit-content;
+        color:white;
+        font-size: 12px;
+        align-self: center;
+    }
+
+  }

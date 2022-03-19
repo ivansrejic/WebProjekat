@@ -69,7 +69,7 @@ export class KupiKartu
         var prikaziSlobodnaMesta = document.createElement("button");
         prikaziSlobodnaMesta.className = "prikaziSlobodnaMesta"; //naziv klase
         prikaziSlobodnaMesta.id = "prikaziSlobodnaMestaID"; // ----------- ID ------------
-        prikaziSlobodnaMesta.innerHTML = "prikaziSlobodnaMesta";
+        prikaziSlobodnaMesta.innerHTML = "PRIKAZI SLOBODNA MESTA";
         trecaForma.appendChild(prikaziSlobodnaMesta);
 
         var autobusDiv = document.createElement("div");
@@ -126,7 +126,7 @@ export class KupiKartu
         var dugmeZaKupovinuKarte = document.createElement("button");
         dugmeZaKupovinuKarte.className = "dugmeZaKupovinuKarte"; //naziv klase
         dugmeZaKupovinuKarte.id = "dugmeZaKupovinuKarteID"; // ----------- ID ------------
-        dugmeZaKupovinuKarte.innerHTML = "KUPI KARTU BATOOO";
+        dugmeZaKupovinuKarte.innerHTML = "KUPI KARTU";
         formularZaKartu.appendChild(dugmeZaKupovinuKarte);
         dugmeZaKupovinuKarte.onclick = (ev) => this.kupiKartu();
 
@@ -155,7 +155,7 @@ export class KupiKartu
         var dugmeZaIzmenu = document.createElement("button");
         dugmeZaIzmenu.className = "dugmeZaIzmenu"; //naziv klase
         dugmeZaIzmenu.id = "dugmeZaIzmenuID"; // ----------- ID ------------
-        dugmeZaIzmenu.innerHTML = "Izmeni";
+        dugmeZaIzmenu.innerHTML = "IZMENI";
         formularZaIzmenu.appendChild(dugmeZaIzmenu);
         dugmeZaIzmenu.onclick = (ev)=>this.izmeniBrojSedista();
     }
@@ -194,7 +194,7 @@ export class KupiKartu
 
         var dugmeZaPrikazAutobusa = document.createElement("button");
         dugmeZaPrikazAutobusa.className = "dugmeZaProveruAutobusa";
-        dugmeZaPrikazAutobusa.innerHTML = "Proveri autobuse za taj i taj datum";
+        dugmeZaPrikazAutobusa.innerHTML = "PRIKAZI AUTOBUSKE LINIJE";
         formularZaAutobus.appendChild(dugmeZaPrikazAutobusa);
         dugmeZaPrikazAutobusa.onclick = (ev) => this.prikaziAutobuseZaDatum(tableBody);
 
@@ -212,7 +212,7 @@ export class KupiKartu
         tabela.appendChild(tableBody);
 
         let th;
-        var kolone = ["REGISTRACIJA","PREVOZNIK","DATUM","DESTINACIJA"];
+        var kolone = ["registracija","prevozoznik","datum","destinacija"];
         kolone.forEach(x=>
             {
                 th = document.createElement("th");
@@ -397,7 +397,6 @@ export class KupiKartu
             body.className="tableBody";
             parent.appendChild(body);
 
-            //return body; 
         }
 
     crtajDivZaTabelu(host)
@@ -427,7 +426,7 @@ export class KupiKartu
         var prikaziKarteDugme = document.createElement("button");
         prikaziKarteDugme.className = "prikaziKarteDugme"; //naziv klase
         prikaziKarteDugme.id = "prikaziKarteDugmeID"; // ----------- ID ------------
-        prikaziKarteDugme.innerHTML = "prikaziKarteZaDestinaciju";
+        prikaziKarteDugme.innerHTML = "PRIKAZI KUPLJENE KARTE";
         divZaDugmice.appendChild(prikaziKarteDugme);
         prikaziKarteDugme.onclick = (ev) => this.prikaziKarteZaDestinaciju();
 
@@ -445,7 +444,7 @@ export class KupiKartu
         tabela.appendChild(tableBody);
 
         let th;
-        var kolone = ["IME","PREZIME","JMBG","PREVOZNIK","DESTINACIJA","REGISTRACIJA","BROJ SEDISTA","DATUM","CENA"];
+        var kolone = ["ime","prezime","jmbg","prev.","dest.","reg.","br sedista","datum","cena"];
         kolone.forEach(x=>
             {
                 th = document.createElement("th");
@@ -506,35 +505,49 @@ export class KupiKartu
             var registracija = document.querySelector(".registracijaSlobodnaMesta").value;
             var destinacija = document.querySelector(".prikaziSlobodnaMestaDestinacija").value;
             var datum = document.querySelector(".prikaziSlobodnaMestaDatum").value;
-            
 
-            fetch("https://localhost:5001/AutobuskaStanica/VratiSedista"+"/"+registracija+"/"+destinacija+"/"+datum,
+            if(registracija == "")
             {
-                method:"GET"
-            }).then(p=>
-                {
-                    if(p.ok)
+                alert("Unesite registraciju autobusa");
+            }
+            else if(destinacija == "")
+            {
+                alert("Unesite destinaciju");
+            }
+            else if(datum == "")
+            {
+                alert("Popunite polje za datum");
+            }
+            else
+            {
+                    fetch("https://localhost:5001/AutobuskaStanica/VratiSedista"+"/"+registracija+"/"+destinacija+"/"+datum,
                     {
-                        var bus = new Autobus();
-                        
-                        p.json().then(data => 
-                            {
-                                data.forEach(x=>{
-                                    bus.listaSedista.push(x);
-                                })
-                                
-                                this.obrisiAutobus();
-                                var busDiv = document.querySelector(".autobusDiv");
-                                
-                                bus.crtajBus(busDiv);
-                                //alert(bus.listaSedista);
-                            })
-                    }
-                    else
-                    {
-                        alert("ne valja");
-                    }
-                })
+                        method:"GET"
+                    }).then(p=>
+                        {
+                            if(p.ok)
+                                {
+                                    var bus = new Autobus();
+                                    
+                                    p.json().then(data => 
+                                        {
+                                            data.forEach(x=>{
+                                                bus.listaSedista.push(x);
+                                            })
+                                            
+                                            this.obrisiAutobus();
+                                            var busDiv = document.querySelector(".autobusDiv");
+                                            
+                                            bus.crtajBus(busDiv);
+                                            //alert(bus.listaSedista);
+                                        })
+                                }
+                            else
+                                {
+                                    alert("Ne postoji autobus sa unetim podacima,pokusajte ponovo");
+                                }
+                        })
+            }
         }
         obrisiAutobus()
         {

@@ -16,7 +16,7 @@ export class DodajLiniju
             host.appendChild(this.kont);
 
             var naslov = document.createElement("h1");
-            naslov.innerHTML = "Kreirajte novu autobusku liniju";
+            naslov.innerHTML = "Dodajte novu autobusku liniju";
             this.kont.appendChild(naslov);
 
             var prevoznici = ["Litas","Lasta","NisExpress"];
@@ -79,7 +79,8 @@ export class DodajLiniju
             formaBus.appendChild(datum);
 
             var btn = document.createElement("button");
-            btn.innerHTML = "Dodaj liniju";
+            btn.innerHTML = "DODAJ LINIJU";
+            btn.className = "dugmence";
             formaBus.appendChild(btn);
 
             btn.onclick =(ev)=> this.dodajLiniju();
@@ -128,5 +129,4 @@ export class DodajLiniju
                             })
                         }
                 }
-              
 }  
