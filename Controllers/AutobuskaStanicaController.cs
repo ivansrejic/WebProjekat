@@ -292,22 +292,24 @@ namespace Controllers
             }
         }
 
-        [Route("IzmeniBrojSedista/{jmbg}/{novoSediste}")]
+        [Route("IzmeniBrojSedista/{registracija}/{datum}/{jmbg}/{novoSediste}")]
         [HttpPut]
-        public async Task<ActionResult> izmeniKartu(string jmbg,int novoSediste)
+        public async Task<ActionResult> izmeniKartu(string registracija,string datum,string jmbg,int novoSediste)
         {
             
-            var karta = await Context.Karte.Include(p=>p.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync(); 
+            var karta = await Context.Karte.Include(p=>p.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
+            var zauzeto = await Context.Karte.Where(x=>x.BrojSedista == novoSediste).Include(p=>p.AutobusFK).Where(x=>x.AutobusFK.Registracija == registracija).Where(x=>x.AutobusFK.datumm == datum).FirstOrDefaultAsync();
+
             try
             {
                 if(jmbg.Length == 13 && jmbg != null)
                 {
-                    if(karta != null)
+                    if(karta != null && zauzeto == null)
                  {
                     karta.BrojSedista = novoSediste;
                     Context.Karte.Update(karta);
                     await Context.SaveChangesAsync();
-                    return Ok("Uspesno izmenjeno");
+                    return Ok();
                  }
                  else
                     return BadRequest("Putnik nema kupljenu kartu");

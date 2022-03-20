@@ -138,6 +138,18 @@ export class KupiKartu
         formularZaIzmenu.className = "FormularZaIzmenu"; //naziv klase
         host.appendChild(formularZaIzmenu);
 
+        var registracija = document.createElement("input");
+        registracija.className = "registracijaInput";
+        registracija.id = "izmeniRegistracija";
+        registracija.placeholder = "registracija";
+        formularZaIzmenu.appendChild(registracija);
+
+        var datum = document.createElement("input");
+        datum.type = "date";
+        datum.className = "datumInput";
+        datum.id = "izmeniDatum";
+        formularZaIzmenu.appendChild(datum);
+        
         var jmbg = document.createElement("input");
         jmbg.type = "text";
         jmbg.placeholder = "JMBG";
@@ -290,8 +302,10 @@ export class KupiKartu
         
     izmeniBrojSedista()
         {
+            var registracija = document.querySelector("#izmeniRegistracija").value;
             var jmbg = document.querySelector(".jmbgZaPromenu").value;
             var noviBrSedista = document.querySelector(".brSedistaZaPromenu").value;
+            var datum = document.querySelector("#izmeniDatum").value;
 
             if(jmbg == null || jmbg.length != 13)
             {
@@ -303,7 +317,7 @@ export class KupiKartu
             }
             else
             {
-                fetch("https://localhost:5001/AutobuskaStanica/IzmeniBrojSedista/"+jmbg+"/"+noviBrSedista,
+                fetch("https://localhost:5001/AutobuskaStanica/IzmeniBrojSedista/"+registracija+"/"+datum+"/"+jmbg+"/"+noviBrSedista,
                         {
                             method:"PUT"
 
@@ -317,7 +331,6 @@ export class KupiKartu
                                     alert("Greska.");
                             })
             }
-
     }
 
     izbrisiKartu()
