@@ -186,31 +186,6 @@ namespace Controllers
             }
         }
 
-        // --------------------------------------------------------------------------------------------
-
-
-        // [Route("KupiKartuFromBody")]
-        // [HttpPost]
-        // public async Task<ActionResult> kupiKartuFromBody([FromBody]Karta karta) // u js pravi validaciju da li je kupljena karta vec, tako sto ces listi vrednosti da dodajes i da proveravas
-        // {
-        //     // if (predmet.Godina < 1 && predmet.Godina > 5)
-        //     // {
-        //     //     return BadRequest("Pogrešna Godina!");
-        //     // }
-
-        //     // // ... Ostale provere, Naziv
-        //     try
-        //     {
-        //         Context.Karte.Add(karta);
-        //         await Context.SaveChangesAsync();
-        //         return Ok("Uspesno kupljena karta");
-
-        //     }
-        //     catch(Exception e)
-        //     {
-        //         return BadRequest(e.Message);
-        //     }
-        // }
 
 
         [EnableCors ("CORS")]
