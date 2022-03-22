@@ -95,6 +95,7 @@ namespace Controllers
                 return BadRequest(e.Message);
             }
         }
+        
         [Route("PreuzmiKarteZaDestinaciju/{destinacija}")]
         [HttpGet]
         public async Task<ActionResult> preuzmiKarteZaDestinaciju(string destinacija)
@@ -130,61 +131,61 @@ namespace Controllers
             }
         }
 
-        [Route("KupiKartu/{brSedista}/{jmbg}/{destinacija}")]
-        [HttpPost]
-        public async Task<ActionResult>kupiKartu(int brSedista,string jmbg,string destinacija)
-        {   
-            try
-            {           
-                int cena;
-                if(destinacija == "Beograd")
-                    {
-                         cena = 300;
-                    }
-                else
-                    {
-                         cena = 200;
-                    }
+        // [Route("KupiKartu/{brSedista}/{jmbg}/{destinacija}")]
+        // [HttpPost]
+        // public async Task<ActionResult>kupiKartu(int brSedista,string jmbg,string destinacija)
+        // {   
+        //     try
+        //     {           
+        //         int cena;
+        //         if(destinacija == "Beograd")
+        //             {
+        //                  cena = 300;
+        //             }
+        //         else
+        //             {
+        //                  cena = 200;
+        //             }
                 
-                var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
+        //         var kupljenaKarta = await Context.Karte.Include(x=>x.PutnikFK).Where(x=>x.PutnikFK.JMBG == jmbg).FirstOrDefaultAsync();
                 
-                if(kupljenaKarta == null)
-                {
-                    if(jmbg != null && jmbg.Length == 13 && brSedista < 16 && brSedista > 1)
-                        {
-                            var putnik = await Context.Putnici.Where(x=>x.JMBG == jmbg).FirstOrDefaultAsync();
-                            var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).FirstOrDefaultAsync();
-                            var sediste = await Context.Karte.Where(x=>x.BrojSedista == brSedista).FirstOrDefaultAsync();
-                            if(putnik != null && bus != null && sediste == null)
-                                {
-                                    Karta k = new Karta
-                                        {
-                                            BrojSedista = brSedista,
-                                            Cena = cena,
-                                            PutnikFK = putnik,
-                                            AutobusFK = bus
-                                        };
-                                    Context.Karte.Add(k);
-                                    await Context.SaveChangesAsync();
-                                    return Ok("Uspesno");
-                                }
-                            else
-                                return BadRequest("Zauzeto sediste npr");
+        //         if(kupljenaKarta == null)
+        //         {
+        //             if(jmbg != null && jmbg.Length == 13 && brSedista < 16 && brSedista > 1)
+        //                 {
+        //                     var putnik = await Context.Putnici.Where(x=>x.JMBG == jmbg).FirstOrDefaultAsync();
+        //                     var bus = await Context.Autobusi.Where(x=>x.Destinacija == destinacija).FirstOrDefaultAsync();
+        //                     var sediste = await Context.Karte.Where(x=>x.BrojSedista == brSedista).FirstOrDefaultAsync();
+        //                     if(putnik != null && bus != null && sediste == null)
+        //                         {
+        //                             Karta k = new Karta
+        //                                 {
+        //                                     BrojSedista = brSedista,
+        //                                     Cena = cena,
+        //                                     PutnikFK = putnik,
+        //                                     AutobusFK = bus
+        //                                 };
+        //                             Context.Karte.Add(k);
+        //                             await Context.SaveChangesAsync();
+        //                             return Ok("Uspesno");
+        //                         }
+        //                     else
+        //                         return BadRequest("Zauzeto sediste npr");
                                 
-                        }
-                        else
-                            return BadRequest("Pogresan jmbg ili sediste");
-                    }
-                    else
-                    {
-                        return BadRequest("Putnik je vec kupio kartu");
-                    }          
-            }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //                 }
+        //                 else
+        //                     return BadRequest("Pogresan jmbg ili sediste");
+        //             }
+        //             else
+        //             {
+        //                 return BadRequest("Putnik je vec kupio kartu");
+        //             }          
+        //     }
+        //     catch(Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
 
 
 
