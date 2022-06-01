@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
+#nullable disable
+
 namespace WebProjekat.Migrations
 {
     [DbContext(typeof(AutobuskaStanicaContext))]
@@ -15,16 +17,18 @@ namespace WebProjekat.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.12")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Models.Autobus", b =>
                 {
                     b.Property<int>("BusID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BusID"), 1L, 1);
 
                     b.Property<string>("Destinacija")
                         .HasMaxLength(30)
@@ -52,8 +56,9 @@ namespace WebProjekat.Migrations
                 {
                     b.Property<int>("KartaID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KartaID"), 1L, 1);
 
                     b.Property<int?>("AutobusFKBusID")
                         .HasColumnType("int");
@@ -80,8 +85,9 @@ namespace WebProjekat.Migrations
                 {
                     b.Property<int>("putnikID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("putnikID"), 1L, 1);
 
                     b.Property<string>("Ime")
                         .IsRequired()
